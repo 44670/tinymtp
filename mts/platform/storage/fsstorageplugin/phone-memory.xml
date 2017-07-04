@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<storage name="media" path="/home/nemo" description="Phone Memory">
+<storage name="media" path="/root/" description="Phone Memory">
     <blacklist>homedir-blacklist.conf</blacklist>
 </storage>

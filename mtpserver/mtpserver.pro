@@ -1,4 +1,4 @@
-TEMPLATE = lib
+TEMPLATE = app
 TARGET = mtp-server
 DEPENDPATH += .
 INCLUDEPATH += . \
@@ -7,7 +7,7 @@ INCLUDEPATH += . \
 ../mts/common
 
 CONFIG += plugin debug_and_release link_pkgconfig
-PKGCONFIG += buteosyncfw5
+# PKGCONFIG += buteosyncfw5
 QT -= gui
 LIBS += -L../mts/ -lmeegomtp
 

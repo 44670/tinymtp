@@ -59,7 +59,6 @@ public:
     ~DeviceInfoProvider();
 
 private:
-    ContextProperty *battery;
 
 private slots:
     void onBatteryPercentageChanged();

@@ -34,8 +34,8 @@
 
 #include <QVariant>
 #include <QList>
-#include <QDBusInterface>
-#include <QDBusPendingCallWatcher>
+//#include <QDBusInterface>
+//#include <QDBusPendingCallWatcher>
 #include "mtptypes.h"
 
 class QString;
@@ -73,7 +73,7 @@ friend class FSStoragePlugin_test;
         bool supportsProperty(MTPObjPropertyCode code) const;
 
     public Q_SLOTS:
-        void ignoreNextUpdateFinished(QDBusPendingCallWatcher *pcw);
+        //void ignoreNextUpdateFinished(QDBusPendingCallWatcher *pcw);
 
     private:
         QHash<MTPObjPropertyCode, fpTrackerQueryHandler> m_handlerTable;
@@ -85,7 +85,7 @@ friend class FSStoragePlugin_test;
                 const QList<const MtpObjPropDesc *> &properties);
         QString buildUpdateQuery(const QString &filePath, QList<MTPObjPropDescVal> &propValList);
         bool isTrackerPropertySupported(const QString &property);
-        QDBusInterface m_minerInterface;
+        //QDBusInterface m_minerInterface;
 };
 }
 #endif

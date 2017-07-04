@@ -30,10 +30,10 @@
 */
 
 #include "deviceinfoprovider.h"
-#include <QDeviceInfo>
+//#include <QDeviceInfo>
 #include <QTimer>
-#include <ssudeviceinfo.h>
-#include <contextproperty.h>
+//#include <ssudeviceinfo.h>
+//#include <contextproperty.h>
 #include "trace.h"
 
 using namespace meegomtp1dot0;
@@ -41,22 +41,11 @@ using namespace meegomtp1dot0;
 /**********************************************
  * DeviceInfoProvider::DeviceInfoProvider
  *********************************************/
-DeviceInfoProvider::DeviceInfoProvider():
-  battery(new ContextProperty("Battery.ChargePercentage", this))
+DeviceInfoProvider::DeviceInfoProvider()
 {
-    QDeviceInfo di;
+    m_serialNo = "serialno";
+    m_deviceVersion = QString("%1 HW: %2").arg("os").arg("firmware");
 
-    SsuDeviceInfo ssuDeviceInfo;
-
-    m_serialNo = ssuDeviceInfo.deviceUid();
-
-    m_deviceVersion = QString("%1 HW: %2").arg(di.version(QDeviceInfo::Os))
-                                          .arg(di.version(QDeviceInfo::Firmware));
-
-    m_manufacturer = di.manufacturer().isEmpty() ? m_manufacturer : di.manufacturer();
-    m_model = di.model().isEmpty() ? m_model : di.model();
-
-    connect(battery, SIGNAL(valueChanged()), this, SLOT(onBatteryPercentageChanged()));
 
     // Initialize the battery charge value. Use idle callback because
     // acting on the battery level information requires that the
@@ -68,7 +57,7 @@ DeviceInfoProvider::DeviceInfoProvider():
     {
         /* Query DeviceModel from SSU and use it to override the value of
          * the friendly name -property defined in the XML configuration */
-        QString deviceModel = ssuDeviceInfo.displayName(Ssu::DeviceModel);
+        QString deviceModel = "friendlyname";
         MTP_LOG_INFO("Setting MTP friendly name to:" << deviceModel);
         setDeviceFriendlyName(deviceModel);
     }
@@ -83,5 +72,4 @@ DeviceInfoProvider::~DeviceInfoProvider()
 
 void DeviceInfoProvider::onBatteryPercentageChanged()
 {
-    setBatteryLevel(battery->value().toUInt());
 }

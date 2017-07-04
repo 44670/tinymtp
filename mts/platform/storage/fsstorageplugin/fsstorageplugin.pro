@@ -3,14 +3,12 @@ include(../../../common.pri)
 TEMPLATE = lib
 TARGET = fsstorage
 
-CONFIG += plugin debug qtsparql
+CONFIG += plugin debug
 
-QT += dbus xml
+QT += xml
 QT -= gui
 
-PKGCONFIG += blkid mount
 
-system(qdbusxml2cpp -c ThumbnailerProxy -p thumbnailerproxy.h:thumbnailerproxy.cpp -i thumbnailpathlist.h ./org.nemomobile.Thumbnailer.xml)
 
 DEPENDPATH += . \
               .. \
@@ -26,25 +24,22 @@ INCLUDEPATH += . \
                ../../../transport \
                ../../../common \
 
+
 # Input
 HEADERS += fsstorageplugin.h \
            storagetracker.h \
            ../storageplugin.h \
-           thumbnailerproxy.h \
-           thumbnailer.h \
            fsinotify.h \
            storageitem.h
 
 SOURCES += fsstorageplugin.cpp \
            fsstoragepluginfactory.cpp \
-           storagetracker.cpp \
-           thumbnailerproxy.cpp \
-           thumbnailer.cpp \
            fsinotify.cpp \
-           storageitem.cpp
+           storageitem.cpp \
+    storagetracker.cpp
 
 LIBPATH += ../../..
-LIBS    += -lmeegomtp -lssu
+LIBS    += -lmeegomtp -lblkid
 
 #install
 target.path = /usr/lib/mtp

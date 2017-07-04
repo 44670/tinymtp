@@ -399,7 +399,6 @@ private:
     QString m_internalPlaylistPath; ///< the path where internal abstract playlists are stored.
     ObjHandle m_writeObjectHandle; ///< The obj handle for which a write operation is currently is progress. 0 means invalid handle, NOT root node!!
     StorageTracker* m_tracker; ///< pointer to the tracker object
-    Thumbnailer* m_thumbnailer; ///< pointer to the thumbnailer object
     FSInotify* m_inotify; ///< pointer to the inotify wrapper
     QHash<QString,quint16> m_formatByExtTable;
     QHash<MTPObjFormatCode, QString> m_imageMimeTable; ///< Maps the MTP object format code (for image types only) to MIME type string

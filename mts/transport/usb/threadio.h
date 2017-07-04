@@ -3,6 +3,7 @@
 
 #include "ptp.h"
 
+
 #include <QThread>
 #include <QMutex>
 #include <QPair>
@@ -33,7 +34,7 @@ protected:
 
 private:
     QMutex m_handleLock;
-    pthread_t m_handle;
+    int m_handle;
 };
 
 class ControlReaderThread : public IOThread {

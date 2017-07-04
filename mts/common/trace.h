@@ -33,12 +33,18 @@
 # define PRN_TRACE_H
 # include <QtGlobal>
 // Use logging macros available in sync-fw
+/*
 # if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #  include <buteosyncfw5/LogMacros.h>
 # else
 #  include <buteosyncfw/LogMacros.h>
 # endif
+*/
 # include "mts.h"
+#include <QtDebug>
+#define LOG_INFO(msg) qCritical() << msg
+#define LOG_CRITICAL(msg) qCritical() << msg
+#define LOG_WARNING(msg) qCritical() << msg
 
 # define MTP_LOG_LEVEL_CRITICAL      1
 # define MTP_LOG_LEVEL_WARNING       2

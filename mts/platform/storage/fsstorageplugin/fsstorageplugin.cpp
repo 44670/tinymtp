@@ -33,7 +33,6 @@
 #include "fsinotify.h"
 #include "storagetracker.h"
 #include "storageitem.h"
-#include "thumbnailer.h"
 #include "trace.h"
 
 #include <sys/statvfs.h>
@@ -52,8 +51,8 @@
 #include <QLocale>
 
 #ifndef UT_ON
-#include <blkid.h>
-#include <libmount.h>
+#include <blkid/blkid.h>
+//#include <libmount.h>
 #endif
 
 using namespace meegomtp1dot0;
@@ -431,11 +430,11 @@ FSStoragePlugin::FSStoragePlugin( quint32 storageId, MTPStorageType storageType,
     populatePuoids();
 
     // Register this type before creating the Thumbnailer
-    qDBusRegisterMetaType<ThumbnailPathList>();
+    //qDBusRegisterMetaType<ThumbnailPathList>();
 
     m_tracker = new StorageTracker();
-    m_thumbnailer = new Thumbnailer();
-    QObject::connect( m_thumbnailer, SIGNAL( thumbnailReady( const QString& ) ), this, SLOT( receiveThumbnail( const QString& ) ) );
+    //m_thumbnailer = new Thumbnailer();
+    //QObject::connect( m_thumbnailer, SIGNAL( thumbnailReady( const QString& ) ), this, SLOT( receiveThumbnail( const QString& ) ) );
     clearCachedInotifyEvent(); // initialize
     m_inotify = new FSInotify( IN_MOVE | IN_CREATE | IN_DELETE | IN_CLOSE_WRITE );
     QObject::connect( m_inotify, SIGNAL(inotifyEventSignal( struct inotify_event* )), this, SLOT(inotifyEventSlot( struct inotify_event* )) );
@@ -493,7 +492,7 @@ void FSStoragePlugin::enumerateStorage_worker()
     emit storagePluginReady(m_storageId);
 
     // enable thumbnailer after fs scan is finished
-    m_thumbnailer->enableThumbnailing();
+    //m_thumbnailer->enableThumbnailing();
 }
 
 /************************************************************
@@ -514,8 +513,8 @@ FSStoragePlugin::~FSStoragePlugin()
 
     delete m_tracker;
     m_tracker = 0;
-    delete m_thumbnailer;
-    m_thumbnailer = 0;
+    //delete m_thumbnailer;
+    //m_thumbnailer = 0;
     delete m_inotify;
     m_inotify = 0;
 }
@@ -1012,13 +1011,9 @@ MTPResponseCode FSStoragePlugin::createFile( const QString &path, MTPObjectInfo 
     if ( !file.open( QIODevice::ReadWrite ) )
     {
         MTP_LOG_WARNING("failed to create file:" << path);
-        switch( file.error() )
-        {
-            case QFileDevice::OpenError:
-                return MTP_RESP_AccessDenied;
-            default:
+
                 return MTP_RESP_GeneralError;
-        }
+      
     }
 
     if( !already_exists ) {
@@ -1222,8 +1217,8 @@ MTPResponseCode FSStoragePlugin::addToStorage( const QString &path,
             foreach ( const QFileInfo &info, dirContents )
             {
                 if (work++ % 16 == 0) {
-                    QCoreApplication::sendPostedEvents();
-                    QCoreApplication::processEvents();
+                   // QCoreApplication::sendPostedEvents();
+                   // QCoreApplication::processEvents();
                 }
                 addToStorage(info.absoluteFilePath(), 0, 0, createIfNotExist, sendEvent);
             }
@@ -2199,15 +2194,6 @@ quint32 FSStoragePlugin::getThumbPixelHeight( StorageItem *storageItem )
 quint32 FSStoragePlugin::getThumbCompressedSize( StorageItem *storageItem )
 {
     quint32 size = 0;
-    if ( isThumbnailableImage( storageItem ) )
-    {
-        QString thumbPath = m_thumbnailer->requestThumbnail( storageItem->m_path,
-                m_imageMimeTable.value( storageItem->m_objectInfo->mtpObjectFormat ) );
-        if( !thumbPath.isEmpty() )
-        {
-            size = QFileInfo( thumbPath ).size();
-        }
-    }
     return size;
 }
 
@@ -3122,7 +3108,7 @@ MTPResponseCode FSStoragePlugin:: getObjectPropertyValueFromStorage( const ObjHa
             }
 
             /* Check if thumbnail already exists / request it to be generated */
-            QString thumbPath = m_thumbnailer->requestThumbnail(storageItem->m_path, m_imageMimeTable.value(objectInfo->mtpObjectFormat));
+            QString thumbPath = "";
             if(thumbPath.isEmpty()) {
                 MTP_LOG_WARNING(storageItem->path() << "has no thumbnail yet");
                 break;
@@ -3695,7 +3681,7 @@ void FSStoragePlugin::excludePath(const QString &path)
 
 QString FSStoragePlugin::filesystemUuid() const
 {
-#ifndef UT_ON
+#if 0
     typedef QScopedPointer<char, QScopedPointerPodDeleter> CharPointer;
 
     QString result;
@@ -3735,6 +3721,6 @@ QString FSStoragePlugin::filesystemUuid() const
 
     return result;
 #else
-    return QStringLiteral("FAKE-TEST-UUID");
+    return QString("FAKE-TEST-UUID");
 #endif
 }

@@ -30,16 +30,15 @@
 */
 
 #include <QtDebug>
-
+#include <QCoreApplication>
 #include <mts.h>
 #include "trace.h"
 #include "mtpserver.h"
-
+#include <stdio.h>
 
 using namespace meegomtp1dot0;
 
-MtpServer::MtpServer(const QString& aPluginName,
-        const Profile& aProfile, PluginCbInterface* aCbInterface) : ServerPlugin(aPluginName, aProfile, aCbInterface)
+MtpServer::MtpServer()
 {
     MTP_LOG_INFO(__PRETTY_FUNCTION__);
 }
@@ -85,7 +84,7 @@ void MtpServer::resume()
     Mts::getInstance()->resume();
 }
 
-void MtpServer::connectivityStateChanged( Sync::ConnectivityType /*aType*/, bool /*aState*/ )
+void MtpServer::connectivityStateChanged( )
 {
     MTP_LOG_INFO(__PRETTY_FUNCTION__);
 }
@@ -93,4 +92,14 @@ void MtpServer::connectivityStateChanged( Sync::ConnectivityType /*aType*/, bool
 bool MtpServer::cleanUp()
 {
     return true;
+}
+
+int main(int argc, char* argv[]) {
+    QCoreApplication a( argc, argv );
+    MtpServer* server = createPlugin();
+    server->startListen();
+    int ret = a.exec();
+    server->stopListen();
+    destroyPlugin(server);
+    return 0;
 }

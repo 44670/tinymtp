@@ -31,16 +31,23 @@
 
 #ifndef MTPSERVER_H
 #define MTPSERVER_H
+#include <QtDebug>
+#define LOG_INFO(msg) qCritical() << msg
+#define LOG_CRITICAL(msg) qCritical() << msg
+#define LOG_WARNING(msg) qCritical() << msg
 
+/*
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <buteosyncfw5/ServerPlugin.h>
 #else
 #include <buteosyncfw/ServerPlugin.h>
 #endif
 
-using namespace Buteo;
 
-class MtpServer : public ServerPlugin
+using namespace Buteo;
+*/
+
+class MtpServer
 {
 public:
 
@@ -49,9 +56,7 @@ public:
     /// \param aCBInterface Pointer to interface to which feedback
     ///                     can be given.
     /// \param aPluginName Name of the plugin
-    MtpServer(const QString& aPluginName,
-              const Profile& aProfile,
-              PluginCbInterface* aCbInterface);
+    MtpServer();
 
     /// \brief The destructor.
     ~MtpServer();
@@ -75,18 +80,18 @@ public:
     void resume();
 
     /// \cleanUp clean up a MTP session
-    virtual bool cleanUp();
+    bool cleanUp();
 
 public slots:
-     void connectivityStateChanged( Sync::ConnectivityType aType, bool aState );
+     void connectivityStateChanged(  );
 };
 
-extern "C" MtpServer* createPlugin(const QString& aPluginName, const Profile& aPluginProfile, PluginCbInterface *aCbInterface)
+extern "C" MtpServer* createPlugin()
 {
-    return new MtpServer(aPluginName, aPluginProfile, aCbInterface);
+    return new MtpServer();
 }
 
-extern "C" void destroyPlugin(ServerPlugin *aServer)
+extern "C" void destroyPlugin(MtpServer *aServer)
 {
     delete aServer;
 }
